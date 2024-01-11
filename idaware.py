@@ -2,10 +2,8 @@
 
 from functools import wraps
 import inspect
-import os
 
 import json
-import yaml
 
 import idaapi
 import idautils
@@ -212,3 +210,14 @@ def printSig(sigmask, name):
     print(outStr)
 
 print("DONE")  
+
+def getFuncDetails(name):
+
+    addr = symbolAddr(name)
+    funcSize = ida_funcs.get_func(addr).size()
+
+    return json.dumps({
+        "name":name,
+        "addr":hex(addr),
+        "bytes": fmtHex(idaapi.get_bytes(addr, funcSize), fmt='\\x{hexbyte}')[0:-1]
+        }, indent=2)
